@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.springframework</groupId>
+  <artifactId>spring-expression</artifactId>
+  <versioning>
+    <release>4.3.10.RELEASE</release>
+    <versions>
+      <version>4.3.10.RELEASE</version>
+    </versions>
+    <lastUpdated>20171229162134</lastUpdated>
+  </versioning>
+</metadata>

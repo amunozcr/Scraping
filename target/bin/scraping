@@ -1,0 +1,100 @@
+#!/bin/sh
+# ----------------------------------------------------------------------------
+#  Copyright 2001-2006 The Apache Software Foundation.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# ----------------------------------------------------------------------------
+
+#   Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+#   reserved.
+
+BASEDIR=`dirname $0`/..
+BASEDIR=`(cd "$BASEDIR"; pwd)`
+
+
+
+# OS specific support.  $var _must_ be set to either true or false.
+cygwin=false;
+darwin=false;
+case "`uname`" in
+  CYGWIN*) cygwin=true ;;
+  Darwin*) darwin=true
+           if [ -z "$JAVA_VERSION" ] ; then
+             JAVA_VERSION="CurrentJDK"
+           else
+             echo "Using Java version: $JAVA_VERSION"
+           fi
+           if [ -z "$JAVA_HOME" ] ; then
+             JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Versions/${JAVA_VERSION}/Home
+           fi
+           ;;
+esac
+
+if [ -z "$JAVA_HOME" ] ; then
+  if [ -r /etc/gentoo-release ] ; then
+    JAVA_HOME=`java-config --jre-home`
+  fi
+fi
+
+# For Cygwin, ensure paths are in UNIX format before anything is touched
+if $cygwin ; then
+  [ -n "$JAVA_HOME" ] && JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
+  [ -n "$CLASSPATH" ] && CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
+fi
+
+# If a specific java binary isn't specified search for the standard 'java' binary
+if [ -z "$JAVACMD" ] ; then
+  if [ -n "$JAVA_HOME"  ] ; then
+    if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
+      # IBM's JDK on AIX uses strange locations for the executables
+      JAVACMD="$JAVA_HOME/jre/sh/java"
+    else
+      JAVACMD="$JAVA_HOME/bin/java"
+    fi
+  else
+    JAVACMD=`which java`
+  fi
+fi
+
+if [ ! -x "$JAVACMD" ] ; then
+  echo "Error: JAVA_HOME is not defined correctly."
+  echo "  We cannot execute $JAVACMD"
+  exit 1
+fi
+
+if [ -z "$REPO" ]
+then
+  REPO="$BASEDIR"/repo
+fi
+
+CLASSPATH=$CLASSPATH_PREFIX:"$BASEDIR"/etc:"$REPO"/org/jsoup/jsoup/1.10.3/jsoup-1.10.3.jar:"$REPO"/com/fasterxml/jackson/core/jackson-core/2.8.9/jackson-core-2.8.9.jar:"$REPO"/com/fasterxml/jackson/core/jackson-databind/2.8.9/jackson-databind-2.8.9.jar:"$REPO"/com/fasterxml/jackson/core/jackson-annotations/2.8.9/jackson-annotations-2.8.9.jar:"$REPO"/org/mongodb/mongodb-driver/3.5.0/mongodb-driver-3.5.0.jar:"$REPO"/org/mongodb/bson/3.5.0/bson-3.5.0.jar:"$REPO"/org/mongodb/mongodb-driver-core/3.5.0/mongodb-driver-core-3.5.0.jar:"$REPO"/org/springframework/boot/spring-boot-starter-web/1.5.6.RELEASE/spring-boot-starter-web-1.5.6.RELEASE.jar:"$REPO"/org/springframework/boot/spring-boot-starter/1.5.6.RELEASE/spring-boot-starter-1.5.6.RELEASE.jar:"$REPO"/org/springframework/boot/spring-boot/1.5.6.RELEASE/spring-boot-1.5.6.RELEASE.jar:"$REPO"/org/springframework/boot/spring-boot-autoconfigure/1.5.6.RELEASE/spring-boot-autoconfigure-1.5.6.RELEASE.jar:"$REPO"/org/springframework/boot/spring-boot-starter-logging/1.5.6.RELEASE/spring-boot-starter-logging-1.5.6.RELEASE.jar:"$REPO"/ch/qos/logback/logback-classic/1.1.11/logback-classic-1.1.11.jar:"$REPO"/ch/qos/logback/logback-core/1.1.11/logback-core-1.1.11.jar:"$REPO"/org/slf4j/jcl-over-slf4j/1.7.25/jcl-over-slf4j-1.7.25.jar:"$REPO"/org/slf4j/jul-to-slf4j/1.7.25/jul-to-slf4j-1.7.25.jar:"$REPO"/org/slf4j/log4j-over-slf4j/1.7.25/log4j-over-slf4j-1.7.25.jar:"$REPO"/org/yaml/snakeyaml/1.17/snakeyaml-1.17.jar:"$REPO"/org/springframework/boot/spring-boot-starter-tomcat/1.5.6.RELEASE/spring-boot-starter-tomcat-1.5.6.RELEASE.jar:"$REPO"/org/apache/tomcat/embed/tomcat-embed-core/8.5.16/tomcat-embed-core-8.5.16.jar:"$REPO"/org/apache/tomcat/embed/tomcat-embed-el/8.5.16/tomcat-embed-el-8.5.16.jar:"$REPO"/org/apache/tomcat/embed/tomcat-embed-websocket/8.5.16/tomcat-embed-websocket-8.5.16.jar:"$REPO"/org/hibernate/hibernate-validator/5.3.5.Final/hibernate-validator-5.3.5.Final.jar:"$REPO"/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final.jar:"$REPO"/org/jboss/logging/jboss-logging/3.3.0.Final/jboss-logging-3.3.0.Final.jar:"$REPO"/com/fasterxml/classmate/1.3.1/classmate-1.3.1.jar:"$REPO"/org/springframework/spring-web/4.3.10.RELEASE/spring-web-4.3.10.RELEASE.jar:"$REPO"/org/springframework/spring-aop/4.3.10.RELEASE/spring-aop-4.3.10.RELEASE.jar:"$REPO"/org/springframework/spring-beans/4.3.10.RELEASE/spring-beans-4.3.10.RELEASE.jar:"$REPO"/org/springframework/spring-context/4.3.10.RELEASE/spring-context-4.3.10.RELEASE.jar:"$REPO"/org/springframework/spring-webmvc/4.3.10.RELEASE/spring-webmvc-4.3.10.RELEASE.jar:"$REPO"/org/springframework/spring-expression/4.3.10.RELEASE/spring-expression-4.3.10.RELEASE.jar:"$REPO"/org/springframework/boot/spring-boot-starter-actuator/1.5.6.RELEASE/spring-boot-starter-actuator-1.5.6.RELEASE.jar:"$REPO"/org/springframework/boot/spring-boot-actuator/1.5.6.RELEASE/spring-boot-actuator-1.5.6.RELEASE.jar:"$REPO"/org/springframework/boot/spring-boot-starter-test/1.5.6.RELEASE/spring-boot-starter-test-1.5.6.RELEASE.jar:"$REPO"/org/springframework/boot/spring-boot-test/1.5.6.RELEASE/spring-boot-test-1.5.6.RELEASE.jar:"$REPO"/org/springframework/boot/spring-boot-test-autoconfigure/1.5.6.RELEASE/spring-boot-test-autoconfigure-1.5.6.RELEASE.jar:"$REPO"/com/jayway/jsonpath/json-path/2.2.0/json-path-2.2.0.jar:"$REPO"/net/minidev/json-smart/2.2.1/json-smart-2.2.1.jar:"$REPO"/net/minidev/accessors-smart/1.1/accessors-smart-1.1.jar:"$REPO"/org/ow2/asm/asm/5.0.3/asm-5.0.3.jar:"$REPO"/org/slf4j/slf4j-api/1.7.16/slf4j-api-1.7.16.jar:"$REPO"/junit/junit/4.12/junit-4.12.jar:"$REPO"/org/assertj/assertj-core/2.6.0/assertj-core-2.6.0.jar:"$REPO"/org/mockito/mockito-core/1.10.19/mockito-core-1.10.19.jar:"$REPO"/org/objenesis/objenesis/2.1/objenesis-2.1.jar:"$REPO"/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:"$REPO"/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3.jar:"$REPO"/org/skyscreamer/jsonassert/1.4.0/jsonassert-1.4.0.jar:"$REPO"/com/vaadin/external/google/android-json/0.0.20131108.vaadin1/android-json-0.0.20131108.vaadin1.jar:"$REPO"/org/springframework/spring-core/4.3.10.RELEASE/spring-core-4.3.10.RELEASE.jar:"$REPO"/org/springframework/spring-test/4.3.10.RELEASE/spring-test-4.3.10.RELEASE.jar:"$REPO"/SSII_WebCrawler_SISIUS/Scraping/0.0.1/Scraping-0.0.1.jar
+EXTRA_JVM_ARGUMENTS=""
+
+# For Cygwin, switch paths to Windows format before running java
+if $cygwin; then
+  [ -n "$CLASSPATH" ] && CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
+  [ -n "$JAVA_HOME" ] && JAVA_HOME=`cygpath --path --windows "$JAVA_HOME"`
+  [ -n "$HOME" ] && HOME=`cygpath --path --windows "$HOME"`
+  [ -n "$BASEDIR" ] && BASEDIR=`cygpath --path --windows "$BASEDIR"`
+  [ -n "$REPO" ] && REPO=`cygpath --path --windows "$REPO"`
+fi
+
+exec "$JAVACMD" $JAVA_OPTS \
+  $EXTRA_JVM_ARGUMENTS \
+  -classpath "$CLASSPATH" \
+  -Dapp.name="scraping" \
+  -Dapp.pid="$$" \
+  -Dapp.repo="$REPO" \
+  -Dbasedir="$BASEDIR" \
+  web.scraping.jsoup.DepartmentsJsoup \
+  "$@"
