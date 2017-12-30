@@ -119,6 +119,7 @@ public class DepartmentsJsoup {
 
 	    MongoDatabase db = client.getDatabase(uri.getDatabase());
 	    MongoCollection col = db.getCollection("departmentsV2");
+	    col.drop();
 	    
 	    System.out.println("Se procede a insertar los datos en BD\n");
 	    col.insertMany(json_array);
